@@ -38,7 +38,7 @@ const convertTime = (duration) => {
   return `${min}:${sec}`;
 };
 
-function Output() {
+function Input() {
   const [playlistURL, setplaylistURL] = useState('');
   const [playlistID, setPlaylistID] = useState('');
   const [loadingFetch, setLoadingFetch] = useState(false);
@@ -390,4 +390,4 @@ function Output() {
   );
 }
 
-export default Output;
+export default Input;
