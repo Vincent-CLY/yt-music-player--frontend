@@ -6,7 +6,8 @@ import PlaySongIcon from '../assets/PlayerPlayIcon.svg?react';
 import PauseSongIcon from '../assets/PlayerPauseIcon.svg?react';
 import StartSongIcon from '../assets/PlayerStartIcon.svg?react';
 import EndSongIcon from '../assets/PlayerEndIcon.svg?react';
-import styles from './Output.module.css';
+import styles from './Input.module.css';
+import Fetching from '../Fetching/Fetching';
 
 const extractPlaylistID = (playlistURL) => {
   const urlPattern =
@@ -48,7 +49,7 @@ function Output() {
   const [playlistLength, setPlaylistLength] = useState(0);
   const [playIndex, setPlayIndex] = useState(-1);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [state, setState] = useState('input'); // input, loading, playing, error
+  const [state, setState] = useState('input'); // input, fetching, playing, error
   const [videoID, setVideoID] = useState('');
   const [thumbnail, setThumbnail] = useState('');
   const [title, setTitle] = useState('');
@@ -87,7 +88,7 @@ function Output() {
     };
 
     eventSource.onmessage = (e) => {
-      setState('loading');
+      setState('fetching');
       try {
         const data = JSON.parse(e.data);
         if (firstMsg) {
@@ -143,11 +144,11 @@ function Output() {
       );
       setPlayIndex(-1);
       next();
-      setInterval(() => {
-        setState('playing');
-        setPrevFetchProgress(0);
-        setNowFetchProgress(0);
-      }, 4000);
+      // setInterval(() => {
+      //   setState('playing');
+      //   setPrevFetchProgress(0);
+      //   setNowFetchProgress(0);
+      // }, 4000);
     });
     return () => {
       eventSource.close();
@@ -281,11 +282,10 @@ function Output() {
   };
 
   return (
-    <div className={`card ${styles['state']}`}>
+    <div className={`card ${styles[state]}`}>
       {state == 'input' && (
         <>
           <h1 className={styles.title}>Music Player</h1>
-          {/* <LoaderIcon /> */}
           <form className={styles['form-group']} onSubmit={handleSubmit}>
             <div className={styles['input-group']}>
               <input
@@ -309,19 +309,13 @@ function Output() {
               <label htmlFor="url" className={styles.error}>
                 Playlist URL or ID is not valid{' '}
               </label>
-            )}
+            )} 
           </form>
         </>
       )}
 
-      {state == 'loading' && (
-        <>
-          <h1 className={styles.title}>Loading</h1>
-          <div className={styles['fetching-progress']}>
-            <div>{`${prevFetchProgress} / ${playlistLength}`}</div>
-            {/* Progress bar */}
-          </div>
-        </>
+      {state == 'fetching' && (
+        <Fetching prevFetchProgress={prevFetchProgress} playlistLength={playlistLength} />
       )}
 
       {state == 'playing' && (
