@@ -1,0 +1,14 @@
+<svg id="spinner" width="53" height="53" viewBox="0 0 53 53" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="26.5" cy="26.5" r="17" stroke="#BFBFBF" stroke-width="5"/>
+  <!-- Arc path that doesn't complete a full circle -->
+  <path
+    id="loading_bar"
+    d="M 26.5 9.5 A 17 17 0 1 1 26.4 9.5" 
+    stroke="#F45D5D"
+    stroke-width="5"
+    stroke-linecap="round"
+    fill="none"
+    stroke-dasharray="106"
+    stroke-dashoffset="106"
+  />
+</svg>
