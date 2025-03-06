@@ -61,225 +61,224 @@ function Input() {
   const [currentTime, setCurrentTime] = useState('0:00');
   const [endTime, setEndTime] = useState('0:00');
 
-  useEffect(() => {
-    if (nowFetchProgress == 0) return;
-    const timeout = setTimeout(() => {
-      if (prevFetchProgress < nowFetchProgress) {
-        setPrevFetchProgress((p) => p + 1);
-      }
-    }, 4);
-    return () => clearTimeout(timeout);
-  }, [nowFetchProgress, prevFetchProgress]);
+  // useEffect(() => {
+  //   if (nowFetchProgress == 0) return;
+  //   const timeout = setTimeout(() => {
+  //     if (prevFetchProgress < nowFetchProgress) {
+  //       setPrevFetchProgress((p) => p + 1);
+  //     }
+  //   }, 4);
+  //   return () => clearTimeout(timeout);
+  // }, [nowFetchProgress, prevFetchProgress]);
 
-  useEffect(() => {
-    if (!loadingFetch) return;
+  // useEffect(() => {
+  //   if (!loadingFetch) return;
 
-    let firstMsg = true;
-    let playlistItems = [];
-    let eventSource = new EventSource(
-      `https://yt-music-player-backend.vercel.app/api/playlists/${playlistID}`
-    );
+  //   let firstMsg = true;
+  //   let playlistItems = [];
+  //   let eventSource = new EventSource(
+  //     `https://yt-music-player-backend.vercel.app/api/playlists/${playlistID}`
+  //   );
 
-    const handleError = (error) => {
-      console.error(`Error occured: ${error}`);
-      eventSource.close();
-      setIsValid(false);
-      setLoadingFetch(false);
-    };
+  //   const handleError = (error) => {
+  //     console.error(`Error occured: ${error}`);
+  //     eventSource.close();
+  //     setIsValid(false);
+  //     setLoadingFetch(false);
+  //   };
 
-    eventSource.onmessage = (e) => {
-      setState('fetching');
-      try {
-        const data = JSON.parse(e.data);
-        if (firstMsg) {
-          const totalItemsPattern = /(\d+)/g;
-          const length = parseInt(data.match(totalItemsPattern).join(''));
-          setPlaylistLength(length);
-          firstMsg = false;
-        } else {
-          data.forEach((item) => {
-            playlistItems.push(JSON.stringify(item));
-          });
-          setNowFetchProgress((n) => {
-            return n + data.length;
-          });
-        }
-      } catch (error) {
-        setState('error');
-        console.error('Error parsing data:', error);
-      }
-    };
-    eventSource.addEventListener('playlistFetchFailed', handleError);
-    eventSource.onerror = handleError;
+  //   eventSource.onmessage = (e) => {
+  //     setState('fetching');
+  //     try {
+  //       const data = JSON.parse(e.data);
+  //       if (firstMsg) {
+  //         const totalItemsPattern = /(\d+)/g;
+  //         const length = parseInt(data.match(totalItemsPattern).join(''));
+  //         setPlaylistLength(length);
+  //         firstMsg = false;
+  //       } else {
+  //         data.forEach((item) => {
+  //           playlistItems.push(JSON.stringify(item));
+  //         });
+  //         setNowFetchProgress((n) => {
+  //           return n + data.length;
+  //         });
+  //       }
+  //     } catch (error) {
+  //       setState('error');
+  //       console.error('Error parsing data:', error);
+  //     }
+  //   };
+  //   eventSource.addEventListener('playlistFetchFailed', handleError);
+  //   eventSource.onerror = handleError;
 
-    eventSource.addEventListener('complete', () => {
-      console.log('End of stream');
-      eventSource.close();
-      let finalPlaylistLength;
-      let playlistLengthDiff;
-      setNowFetchProgress((n) => {
-        finalPlaylistLength = n;
-        return 0;
-      });
-      setPlaylistLength((p) => {
-        playlistLengthDiff = p - finalPlaylistLength;
-        console.log(`Difference: ${playlistLengthDiff}`);
-        return finalPlaylistLength;
-      });
-      setPrevFetchProgress((p) => {
-        return finalPlaylistLength;
-      });
+  //   eventSource.addEventListener('complete', () => {
+  //     console.log('End of stream');
+  //     eventSource.close();
+  //     let finalPlaylistLength;
+  //     let playlistLengthDiff;
+  //     setNowFetchProgress((n) => {
+  //       finalPlaylistLength = n;
+  //       return 0;
+  //     });
+  //     setPlaylistLength((p) => {
+  //       playlistLengthDiff = p - finalPlaylistLength;
+  //       console.log(`Difference: ${playlistLengthDiff}`);
+  //       return finalPlaylistLength;
+  //     });
+  //     setPrevFetchProgress((p) => {
+  //       return finalPlaylistLength;
+  //     });
 
-      window.localStorage.setItem(
-        'playlistItems',
-        JSON.stringify(playlistItems)
-      );
-      window.localStorage.setItem(
-        'playOrder',
-        JSON.stringify(
-          shuffle(
-            JSON.parse(window.localStorage.getItem('playlistItems')).length
-          )
-        )
-      );
-      setPlayIndex(-1);
-      next();
-      // setInterval(() => {
-      //   setState('playing');
-      //   setPrevFetchProgress(0);
-      //   setNowFetchProgress(0);
-      // }, 4000);
-    });
-    return () => {
-      eventSource.close();
-    };
-  }, [loadingFetch, playlistID]);
+  //     window.localStorage.setItem(
+  //       'playlistItems',
+  //       JSON.stringify(playlistItems)
+  //     );
+  //     window.localStorage.setItem(
+  //       'playOrder',
+  //       JSON.stringify(
+  //         shuffle(
+  //           JSON.parse(window.localStorage.getItem('playlistItems')).length
+  //         )
+  //       )
+  //     );
+  //     setPlayIndex(-1);
+  //     next();
+  //     setInterval(() => {
+  //       setState('playing');
+  //       setPrevFetchProgress(0);
+  //     }, 4000);
+  //   });
+  //   return () => {
+  //     eventSource.close();
+  //   };
+  // }, [loadingFetch, playlistID]);
 
-  useEffect(() => {
-    if (playIndex == -1) return;
-    // console.log(playIndex);
-    window.localStorage.setItem('playIndex', playIndex);
-    setVideoID(
-      JSON.parse(
-        JSON.parse(window.localStorage.getItem('playlistItems'))[
-          JSON.parse(window.localStorage.getItem('playOrder'))[playIndex]
-        ]
-      ).id
-    );
-    setThumbnail(
-      JSON.parse(
-        JSON.parse(window.localStorage.getItem('playlistItems'))[
-          JSON.parse(window.localStorage.getItem('playOrder'))[playIndex]
-        ]
-      ).thumbnail.url
-    );
-    setTitle(
-      JSON.parse(
-        JSON.parse(window.localStorage.getItem('playlistItems'))[
-          JSON.parse(window.localStorage.getItem('playOrder'))[playIndex]
-        ]
-      ).title
-    );
-    setAuthor(
-      JSON.parse(
-        JSON.parse(window.localStorage.getItem('playlistItems'))[
-          JSON.parse(window.localStorage.getItem('playOrder'))[playIndex]
-        ]
-      ).author
-    );
-    setDuration(
-      JSON.parse(
-        JSON.parse(window.localStorage.getItem('playlistItems'))[playIndex]
-      ).duration
-    );
-    setProgress(0);
-    setCurrentTime(convertTime(0));
-    setEndTime(
-      convertTime(
-        JSON.parse(
-          JSON.parse(window.localStorage.getItem('playlistItems'))[playIndex]
-        ).duration
-      )
-    );
-  }, [playIndex]);
+  // useEffect(() => {
+  //   if (playIndex == -1) return;
+  //   // console.log(playIndex);
+  //   window.localStorage.setItem('playIndex', playIndex);
+  //   setVideoID(
+  //     JSON.parse(
+  //       JSON.parse(window.localStorage.getItem('playlistItems'))[
+  //         JSON.parse(window.localStorage.getItem('playOrder'))[playIndex]
+  //       ]
+  //     ).id
+  //   );
+  //   setThumbnail(
+  //     JSON.parse(
+  //       JSON.parse(window.localStorage.getItem('playlistItems'))[
+  //         JSON.parse(window.localStorage.getItem('playOrder'))[playIndex]
+  //       ]
+  //     ).thumbnail.url
+  //   );
+  //   setTitle(
+  //     JSON.parse(
+  //       JSON.parse(window.localStorage.getItem('playlistItems'))[
+  //         JSON.parse(window.localStorage.getItem('playOrder'))[playIndex]
+  //       ]
+  //     ).title
+  //   );
+  //   setAuthor(
+  //     JSON.parse(
+  //       JSON.parse(window.localStorage.getItem('playlistItems'))[
+  //         JSON.parse(window.localStorage.getItem('playOrder'))[playIndex]
+  //       ]
+  //     ).author
+  //   );
+  //   setDuration(
+  //     JSON.parse(
+  //       JSON.parse(window.localStorage.getItem('playlistItems'))[playIndex]
+  //     ).duration
+  //   );
+  //   setProgress(0);
+  //   setCurrentTime(convertTime(0));
+  //   setEndTime(
+  //     convertTime(
+  //       JSON.parse(
+  //         JSON.parse(window.localStorage.getItem('playlistItems'))[playIndex]
+  //       ).duration
+  //     )
+  //   );
+  // }, [playIndex]);
 
-  useEffect(() => {
-    const videoId = 'YOUR_VIDEO_ID'; // Replace with your YouTube video ID
-    const audioElement = document.getElementById('youtube-audio');
+  // useEffect(() => {
+  //   const videoId = 'YOUR_VIDEO_ID'; // Replace with your YouTube video ID
+  //   const audioElement = document.getElementById('youtube-audio');
 
-    fetch(`https://www.youtube.com/get_video_info?video_id=${videoId}`)
-      .then((response) => response.text())
-      .then((data) => {
-        const videoInfo = new URLSearchParams(data);
-        const playerResponse = JSON.parse(videoInfo.get('player_response'));
-        const audioFormats =
-          playerResponse.streamingData.adaptiveFormats.filter((format) =>
-            format.mimeType.includes('audio')
-          );
-        const audioUrl = audioFormats[0].url;
-        audioElement.src = audioUrl;
-      })
-      .catch((error) => console.error('Error fetching video info:', error));
-  }, [videoID]);
+  //   fetch(`https://www.youtube.com/get_video_info?video_id=${videoId}`)
+  //     .then((response) => response.text())
+  //     .then((data) => {
+  //       const videoInfo = new URLSearchParams(data);
+  //       const playerResponse = JSON.parse(videoInfo.get('player_response'));
+  //       const audioFormats =
+  //         playerResponse.streamingData.adaptiveFormats.filter((format) =>
+  //           format.mimeType.includes('audio')
+  //         );
+  //       const audioUrl = audioFormats[0].url;
+  //       audioElement.src = audioUrl;
+  //     })
+  //     .catch((error) => console.error('Error fetching video info:', error));
+  // }, [videoID]);
 
-  const handleChange = (e) => {
-    setIsValid(true);
-    if (e.target.value != '') {
-      setIsEmpty(false);
-      setplaylistURL(e.target.value);
-      console.log(e.target.value);
-    } else {
-      setIsEmpty(true);
-    }
-  };
+  // const handleChange = (e) => {
+  //   setIsValid(true);
+  //   if (e.target.value != '') {
+  //     setIsEmpty(false);
+  //     setplaylistURL(e.target.value);
+  //     console.log(e.target.value);
+  //   } else {
+  //     setIsEmpty(true);
+  //   }
+  // };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsValid(true);
-    if (playlistURL) {
-      const playlistID = extractPlaylistID(playlistURL);
-      setPlaylistID(playlistID);
-      setLoadingFetch(true);
-      console.log(playlistID);
-    } else {
-      console.log('Please Enter Playlist URL!');
-    }
-  };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setIsValid(true);
+  //   if (playlistURL) {
+  //     const playlistID = extractPlaylistID(playlistURL);
+  //     setPlaylistID(playlistID);
+  //     setLoadingFetch(true);
+  //     console.log(playlistID);
+  //   } else {
+  //     console.log('Please Enter Playlist URL!');
+  //   }
+  // };
 
-  const handleMouseClick = useCallback(
-    (e) => {
-      if (!progressBarRef.current) return;
-      const rect = progressBarRef.current.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const width = rect.width;
-      const percentage = Math.min(Math.max((x / width) * 100, 0), 100);
-      setProgress(percentage);
-      console.log(percentage, duration);
-      console.log(
-        Math.min(Math.floor((duration * percentage) / 100), duration)
-      );
-      console.log(
-        convertTime(
-          Math.min(Math.floor((duration * percentage) / 100), duration)
-        )
-      );
-      setCurrentTime(
-        convertTime(
-          Math.min(Math.floor((duration * percentage) / 100), duration)
-        )
-      );
-    },
-    [duration]
-  );
+  // const handleMouseClick = useCallback(
+  //   (e) => {
+  //     if (!progressBarRef.current) return;
+  //     const rect = progressBarRef.current.getBoundingClientRect();
+  //     const x = e.clientX - rect.left;
+  //     const width = rect.width;
+  //     const percentage = Math.min(Math.max((x / width) * 100, 0), 100);
+  //     setProgress(percentage);
+  //     console.log(percentage, duration);
+  //     console.log(
+  //       Math.min(Math.floor((duration * percentage) / 100), duration)
+  //     );
+  //     console.log(
+  //       convertTime(
+  //         Math.min(Math.floor((duration * percentage) / 100), duration)
+  //       )
+  //     );
+  //     setCurrentTime(
+  //       convertTime(
+  //         Math.min(Math.floor((duration * percentage) / 100), duration)
+  //       )
+  //     );
+  //   },
+  //   [duration]
+  // );
 
-  const back = () => {
-    setState('input');
-  };
+  // const back = () => {
+  //   setState('input');
+  // };
 
-  const next = () => {
-    setPlayIndex(playIndex + 1);
-    console.log(playIndex);
-  };
+  // const next = () => {
+  //   setPlayIndex(playIndex + 1);
+  //   console.log(playIndex);
+  // };
 
   return (
     <div className={`card ${styles[state]}`}>
