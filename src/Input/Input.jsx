@@ -9,34 +9,34 @@ import EndSongIcon from '../assets/PlayerEndIcon.svg?react';
 import styles from './Input.module.css';
 import Fetching from '../Fetching/Fetching';
 
-const extractPlaylistID = (playlistURL) => {
-  const urlPattern =
-    /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)?(\/playlist\?list=)?([\w-]+).*$/;
-  const match = playlistURL.match(urlPattern);
-  return match[5];
-};
+// const extractPlaylistID = (playlistURL) => {
+//   const urlPattern =
+//     /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)?(\/playlist\?list=)?([\w-]+).*$/;
+//   const match = playlistURL.match(urlPattern);
+//   return match[5];
+// };
 
-const shuffle = (length) => {
-  let arr = [];
-  for (let i = 0; i < length; i++) {
-    arr.push(i);
-  }
-  for (let i = length - 1; i > 0; i--) {
-    const randomIndex = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[randomIndex]] = [arr[randomIndex], arr[i]];
-  }
-  console.log(`Shuffle2: ${arr}`);
-  return arr;
-};
+// const shuffle = (length) => {
+//   let arr = [];
+//   for (let i = 0; i < length; i++) {
+//     arr.push(i);
+//   }
+//   for (let i = length - 1; i > 0; i--) {
+//     const randomIndex = Math.floor(Math.random() * (i + 1));
+//     [arr[i], arr[randomIndex]] = [arr[randomIndex], arr[i]];
+//   }
+//   console.log(`Shuffle2: ${arr}`);
+//   return arr;
+// };
 
-const convertTime = (duration) => {
-  const min = Math.floor(duration / 60);
-  const sec = duration % 60;
-  if (sec < 10) {
-    return `${min}:0${sec}`;
-  }
-  return `${min}:${sec}`;
-};
+// const convertTime = (duration) => {
+//   const min = Math.floor(duration / 60);
+//   const sec = duration % 60;
+//   if (sec < 10) {
+//     return `${min}:0${sec}`;
+//   }
+//   return `${min}:${sec}`;
+// };
 
 function Input() {
   const [playlistURL, setplaylistURL] = useState('');
