@@ -1,4 +1,4 @@
-export const handleChange = (e) => {
+export const handleChange = (e, setIsValid, setIsEmpty, setplaylistURL) => {
     setIsValid(true);
     if (e.target.value != '') {
       setIsEmpty(false);

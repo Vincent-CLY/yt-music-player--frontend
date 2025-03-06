@@ -1,4 +1,6 @@
-export const handleSubmit = async (e) => {
+import { extractPlaylistID } from "./extractPlaylist";
+
+export const handleSubmit = async (e, setIsValid, playlistURL, setPlaylistID, setLoadingFetch) => {
     e.preventDefault();
     setIsValid(true);
     if (playlistURL) {

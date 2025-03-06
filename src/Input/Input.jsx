@@ -1,11 +1,13 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import LoaderIcon from '../assets/Loader.svg?react';
-import NextSongIcon from '../assets/PlayerNextIcon.svg?react';
-import PrevSongIcon from '../assets/PlayerPreviousIcon.svg?react';
-import PlaySongIcon from '../assets/PlayerPlayIcon.svg?react';
-import PauseSongIcon from '../assets/PlayerPauseIcon.svg?react';
-import StartSongIcon from '../assets/PlayerStartIcon.svg?react';
-import EndSongIcon from '../assets/PlayerEndIcon.svg?react';
+// import LoaderIcon from '../assets/Loader.svg?react';
+// import NextSongIcon from '../assets/PlayerNextIcon.svg?react';
+// import PrevSongIcon from '../assets/PlayerPreviousIcon.svg?react';
+// import PlaySongIcon from '../assets/PlayerPlayIcon.svg?react';
+// import PauseSongIcon from '../assets/PlayerPauseIcon.svg?react';
+// import StartSongIcon from '../assets/PlayerStartIcon.svg?react';
+// import EndSongIcon from '../assets/PlayerEndIcon.svg?react';
+import { handleChange } from '../utils/urlInputUtils/handleChange';
+import { handleSubmit } from '../utils/urlInputUtils/handleSubmit';
 import styles from './Input.module.css';
 import Fetching from '../Fetching/Fetching';
 
@@ -39,7 +41,7 @@ import Fetching from '../Fetching/Fetching';
 // };
 
 function Input() {
-  const [playlistURL, setplaylistURL] = useState('');
+  const [playlistURL, setPlaylistURL] = useState('');
   const [playlistID, setPlaylistID] = useState('');
   const [loadingFetch, setLoadingFetch] = useState(false);
   const [isValid, setIsValid] = useState(true);
@@ -285,7 +287,7 @@ function Input() {
       {state == 'input' && (
         <>
           <h1 className={styles.title}>Music Player</h1>
-          <form className={styles['form-group']} onSubmit={handleSubmit}>
+          <form className={styles['form-group']} onSubmit={(e) => handleSubmit(e, setIsValid, playlistURL, setPlaylistID, setLoadingFetch)}>
             <div className={styles['input-group']}>
               <input
                 id="url"
@@ -294,7 +296,7 @@ function Input() {
                   !isValid ? styles['error-input'] : ''
                 }`}
                 placeholder="Enter YouTube Playlist URL or ID"
-                onChange={handleChange}
+                onChange={(e) => handleChange(e, setIsValid, setIsEmpty, setPlaylistURL)}
               />
               <button
                 disabled={loadingFetch | isEmpty}
