@@ -5,9 +5,9 @@ import PlaySongIcon from '../assets/PlayerPlayIcon.svg?react';
 import PauseSongIcon from '../assets/PlayerPauseIcon.svg?react';
 import StartSongIcon from '../assets/PlayerStartIcon.svg?react';
 import EndSongIcon from '../assets/PlayerEndIcon.svg?react';
-import styles from './Playing.module.css';
+import styles from './Player.module.css';
 
-function Playing() {
+function Player() {
   return (
     <>
       <iframe
@@ -59,4 +59,4 @@ function Playing() {
   );
 }
 
-export default Playing;
+export default Player;
