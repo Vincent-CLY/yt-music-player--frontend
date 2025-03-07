@@ -1,0 +1,164 @@
+:root {
+    --progress-bar: rgb(74, 74, 74);
+    --progress-bar-filled: red;
+    --primary-color: rgb();
+    --background-color: #fffbf6;
+    --card-background-color: #fdf3e6;
+    --button-color: #532e09;
+    --error-color: red;
+  }
+  
+  .input,
+  .fetching,
+  .playing {
+  }
+  
+  .title {
+    margin-top: 0;
+  }
+  
+  .form-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .input-group {
+    display: flex;
+    width: 100%;
+  }
+  
+  .url-input {
+    box-sizing: border-box;
+    border: 1px solid gray;
+    border-radius: 8px 0 0 8px;
+    border-right: 0;
+    outline: none;
+    height: 38px;
+    min-width: 180px;
+    flex: 1;
+    padding-inline: 14px;
+    font-size: 16px;
+    transition: color 0.2s ease, box-shadowing 0.2s ease;
+  }
+  
+  .url-input:focus {
+    border-color: var(--button-color);
+    box-shadow: 0 0 0 1px #532e091f;
+  }
+  
+  .error-input {
+    border-color: var(--error-color);
+  }
+  
+  .submit-btn {
+    position: relative;
+    box-sizing: border-box;
+    font-weight: 500;
+    width: 60px;
+    min-width: 40px;
+    border: none;
+    border-radius: 0 8px 8px 0;
+    background-color: var(--button-color);
+    height: 38px;
+    color: #fffbf6;
+    font-size: 16px;
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .error {
+    color: var(--error-color);
+    display: block;
+    margin-top: 5px;
+    width: 100%;
+  }
+  
+  .fetching-progress {
+    position: relative;
+  }
+  
+  .playing {
+  }
+  
+  .thumbnail {
+    width: 50vw;
+    height: 50vw;
+    object-fit: fill;
+  }
+  
+  .controls {
+    display: grid;
+    position: relative;
+    width: 100%;
+  }
+  
+  .progress-bar {
+    position: relative;
+    width: 100%;
+    height: 5px;
+    border-radius: 5px;
+    background: var(--progress-bar);
+    cursor: pointer;
+  }
+  
+  .progress-bar--filled {
+    position: relative;
+    height: 100%;
+    border-radius: 5px;
+    background: var(--progress-bar-filled);
+  }
+  
+  .progress-bar--knob {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: var(--progress-bar-filled);
+    border-radius: 50%;
+    top: 50%;
+    right: -6px; /* Half of the knob width */
+    translate: 0 -50%;
+    transition: transform 0.3s ease;
+  }
+  
+  .current-time {
+    position: absolute;
+    left: 0;
+  }
+  
+  .end-time {
+    position: absolute;
+    right: 0;
+  }
+  
+  .path {
+    stroke: white;
+    stroke-linecap: round;
+  }
+  
+  .controls {
+    display: flex;
+  }
+  
+  .controls-back {
+  }
+  
+  .controls-play-pause {
+  }
+  
+  .playing {
+  }
+  
+  .paused {
+  }
+  
+  .controls-next {
+  }
+  

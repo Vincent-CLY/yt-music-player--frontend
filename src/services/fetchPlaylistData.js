@@ -1,5 +1,8 @@
-useEffect(() => {
-    if (!loadingFetch) return;
+import { nextSong } from "../utils/playerUtils/nextSong";
+
+export const fetchPlaylistData = (playlistID, setIsValid, isFetching, setIsFetching, setState) => {
+    console.log(isFetching);
+    if (!isFetching) return;
 
     let firstMsg = true;
     let playlistItems = [];
@@ -11,7 +14,7 @@ useEffect(() => {
       console.error(`Error occured: ${error}`);
       eventSource.close();
       setIsValid(false);
-      setLoadingFetch(false);
+      setIsFetching(false);
     };
 
     eventSource.onmessage = (e) => {
@@ -70,7 +73,7 @@ useEffect(() => {
         )
       );
       setPlayIndex(-1);
-      next();
+      nextSong();
       setInterval(() => {
         setState('playing');
         setPrevFetchProgress(0);
@@ -79,4 +82,4 @@ useEffect(() => {
     return () => {
       eventSource.close();
     };
-  }, [loadingFetch, playlistID]);
+  }
